@@ -1,40 +1,32 @@
-# === Python ===
+# Python
 __pycache__/
 *.py[cod]
-*$py.class
+*.pyd
+*.pyo
+*.so
+*.egg-info/
+dist/
+build/
 
-# === Virtual environments ===
-venv/
+# Virtual env
 .venv/
-env/
+venv/
 ENV/
+env/
 
-# === Django ===
-*.sqlite3
+# Django
+*.log
 db.sqlite3
 media/
-staticfiles/
-*.log
-local_settings.py
 
-# Django migrations cache
-**/migrations/__pycache__/
-
-# === PyCharm / IntelliJ ===
+# IDE
 .idea/
-*.iml
+.vscode/
 
-# === OS / Windows ===
+# OS
+.DS_Store
 Thumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-*.lnk
 
-# === dotenv / secrets ===
+# dotenv
 .env
 .env.*
-*.pem
-*.key
-
-# === Jupyter (если вдруг) ===
-.ipynb_checkpoints/
