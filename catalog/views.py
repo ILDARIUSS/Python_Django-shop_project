@@ -1,24 +1,18 @@
 from django.shortcuts import render
+from .models import Product
 
 
 def home(request):
-    return render(request, "catalog/home.html")
+    # Достаём товары из БД
+    # select_related('category') ускоряет доступ к product.category.name
+    products = Product.objects.select_related("category").all()
+
+    context = {
+        "products": products,
+    }
+    return render(request, "catalog/home.html", context)
 
 
 def contacts(request):
-    context = {}
-
-    if request.method == "POST":
-        name = request.POST.get("name")
-        message = request.POST.get("message")
-
-        # Просто для проверки - вывод в консоль
-        print(f"[CONTACT FORM] name={name} message={message}")
-
-        context["success"] = True
-        context["name"] = name
-
-    return render(request, "catalog/contacts.html", context)
-from django.shortcuts import render
-
-# Create your views here.
+    # Как и раньше: пока просто отдаём статическую страницу контактов
+    return render(request, "catalog/contacts.html")
