@@ -125,3 +125,10 @@ from pathlib import Path
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+import os
+
+# Папка, куда будут загружаться файлы
+MEDIA_URL = '/media/'
+
+# Путь до папки с медиафайлами (будет создана в корне проекта)
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

@@ -17,13 +17,24 @@ class Category(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=150, verbose_name="Название")
     description = models.TextField(blank=True, null=True, verbose_name="Описание")
+
     category = models.ForeignKey(
         Category,
         on_delete=models.PROTECT,
         related_name="products",
         verbose_name="Категория",
     )
+
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Цена")
+
+    # ✅ поле для изображения (MEDIA)
+    image = models.ImageField(
+        upload_to="products/",
+        blank=True,
+        null=True,
+        verbose_name="Изображение",
+    )
+
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Создан")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Обновлён")
 
