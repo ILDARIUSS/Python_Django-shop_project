@@ -1,0 +1,18 @@
+[
+  {
+    "model": "catalog.category",
+    "pk": 9,
+    "fields": {
+      "name": "Ноутбуки",
+      "description": "Портативные компьютеры"
+    }
+  },
+  {
+    "model": "catalog.category",
+    "pk": 10,
+    "fields": {
+      "name": "Смартфоны",
+      "description": "Мобильные телефоны"
+    }
+  }
+]

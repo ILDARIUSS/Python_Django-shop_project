@@ -1,0 +1,41 @@
+[
+  {
+    "model": "catalog.product",
+    "pk": 1,
+    "fields": {
+      "name": "MacBook Air M2",
+      "description": "Лёгкий ноутбук Apple",
+      "price": "119990.00",
+      "category": 9,
+      "image": "",
+      "created_at": "2026-02-04T17:42:08.125778Z",
+      "updated_at": "2026-02-04T17:42:08.125800Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 2,
+    "fields": {
+      "name": "Samsung Galaxy S24",
+      "description": "Флагман Samsung",
+      "price": "79990.00",
+      "category": 10,
+      "image": "",
+      "created_at": "2026-02-04T17:42:08.129651Z",
+      "updated_at": "2026-02-04T17:42:08.129666Z"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 3,
+    "fields": {
+      "name": "iPhone 15",
+      "description": "Смартфон Apple",
+      "price": "99990.00",
+      "category": 10,
+      "image": "",
+      "created_at": "2026-02-04T17:42:08.133228Z",
+      "updated_at": "2026-02-04T17:42:08.133250Z"
+    }
+  }
+]
