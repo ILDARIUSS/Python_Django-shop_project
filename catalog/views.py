@@ -1,24 +1,11 @@
 from django.shortcuts import render
+from .models import Product
 
 
 def home(request):
-    return render(request, "catalog/home.html")
+    products = Product.objects.select_related("category").all()
+    return render(request, "catalog/home.html", {"products": products})
 
 
 def contacts(request):
-    context = {}
-
-    if request.method == "POST":
-        name = request.POST.get("name")
-        message = request.POST.get("message")
-
-        # Просто для проверки - вывод в консоль
-        print(f"[CONTACT FORM] name={name} message={message}")
-
-        context["success"] = True
-        context["name"] = name
-
-    return render(request, "catalog/contacts.html", context)
-from django.shortcuts import render
-
-# Create your views here.
+    return render(request, "catalog/contacts.html")

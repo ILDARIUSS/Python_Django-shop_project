@@ -11,9 +11,12 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv()
 
 
 # Quick-start development settings - unsuitable for production
@@ -122,3 +125,10 @@ from pathlib import Path
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+import os
+
+# Папка, куда будут загружаться файлы
+MEDIA_URL = '/media/'
+
+# Путь до папки с медиафайлами (будет создана в корне проекта)
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
