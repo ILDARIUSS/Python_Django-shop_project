@@ -1,0 +1,30 @@
+[
+  {
+    "model": "catalog.product",
+    "pk": 1,
+    "fields": {
+      "name": "Product 1",
+      "description": "Description of product 1",
+      "category": 1,
+      "price": "19.99",
+      "created_at": "2026-02-05T00:00:00Z",
+      "updated_at": "2026-02-05T00:00:00Z",
+      "stock": 100,
+      "is_available": true
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 2,
+    "fields": {
+      "name": "Product 2",
+      "description": "Description of product 2",
+      "category": 2,
+      "price": "29.99",
+      "created_at": "2026-02-05T00:00:00Z",
+      "updated_at": "2026-02-05T00:00:00Z",
+      "stock": 50,
+      "is_available": false
+    }
+  }
+]
