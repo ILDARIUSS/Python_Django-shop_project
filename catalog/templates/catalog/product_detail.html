@@ -1,0 +1,38 @@
+{% extends "base_generic.html" %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1 class="mb-3">{{ product.name }}</h1>
+
+  {% if product.description %}
+    <p class="text-muted">{{ product.description }}</p>
+  {% endif %}
+
+  <p><strong>Цена:</strong> {{ product.price }} ₽</p>
+  <p><strong>На складе:</strong> {{ product.stock }}</p>
+
+  <p>
+    <strong>Статус:</strong>
+    {% if product.is_available %}Доступен{% else %}Недоступен{% endif %}
+  </p>
+
+  <hr>
+
+  {% if product.image %}
+    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid mb-3">
+  {% else %}
+    <p><em>Изображение не загружено</em></p>
+  {% endif %}
+
+  <hr>
+
+  <p><strong>Дата добавления:</strong> {{ product.created_at }}</p>
+  <p><strong>Дата обновления:</strong> {{ product.updated_at }}</p>
+
+  <a class="btn btn-outline-primary mt-3" href="{% url 'catalog:product_list' %}">
+    ← Назад к каталогу
+  </a>
+</div>
+{% endblock %}
