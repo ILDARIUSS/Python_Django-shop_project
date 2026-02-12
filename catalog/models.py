@@ -38,6 +38,12 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Создан")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="Обновлён")
 
+    # Новое поле для количества товара на складе
+    stock = models.PositiveIntegerField(default=0, verbose_name="На складе")
+
+    # Новое поле для статуса доступности товара
+    is_available = models.BooleanField(default=True, verbose_name="Доступен для продажи")
+
     def __str__(self):
         return f"{self.name} ({self.price})"
 
