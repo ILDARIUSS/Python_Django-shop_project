@@ -1,0 +1,14 @@
+{% extends "base_generic.html" %}
+
+{% block title %}Запись блога{% endblock %}
+
+{% block content %}
+  <h1>Запись блога</h1>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Сохранить</button>
+    <a href="{% url 'blog:post_list' %}">Отмена</a>
+  </form>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base_generic.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+  <h1>{{ post.title }}</h1>
+
+  <p><strong>Просмотры:</strong> {{ post.views_count }}</p>
+  <p><strong>Создано:</strong> {{ post.created_at|date:"d.m.Y H:i" }}</p>
+
+  {% if post.preview %}
+    <img src="{{ post.preview.url }}" alt="{{ post.title }}">
+  {% else %}
+    <em>Превью не загружено</em>
+  {% endif %}
+
+  <hr>
+
+  <div>
+    {{ post.content|linebreaks }}
+  </div>
+
+  <hr>
+
+  <p>
+    <a href="{% url 'blog:post_edit' post.pk %}">Редактировать</a> |
+    <a href="{% url 'blog:post_delete' post.pk %}">Удалить</a> |
+    <a href="{% url 'blog:post_list' %}">Назад к списку</a>
+  </p>
+{% endblock %}
