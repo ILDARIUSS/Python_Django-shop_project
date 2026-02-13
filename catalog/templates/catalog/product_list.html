@@ -1,19 +1,38 @@
 {% extends "base_generic.html" %}
 
-{% block title %}Каталог{% endblock %}
-
 {% block content %}
-<h1>Каталог</h1>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="mb-0">Каталог</h1>
+    <a class="btn btn-success" href="{% url 'catalog:product_create' %}">+ Добавить товар</a>
+  </div>
 
-<ul>
-  {% for product in products %}
-    <li>
-      <a href="{% url 'catalog:product_detail' product.pk %}">
-        {{ product.name }}
-      </a> - {{ product.price }}₽
-    </li>
-  {% empty %}
-    <li>Товаров пока нет</li>
-  {% endfor %}
-</ul>
+  {% if products %}
+    <ul class="list-group">
+      {% for product in products %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <div>
+            <a href="{% url 'catalog:product_detail' product.pk %}">
+              {{ product.name }}
+            </a>
+            <div class="text-muted small">
+              Цена: {{ product.price }} | Остаток: {{ product.stock }}
+            </div>
+          </div>
+
+          <div class="d-flex gap-2">
+            <a class="btn btn-sm btn-outline-primary" href="{% url 'catalog:product_update' product.pk %}">
+              Редактировать
+            </a>
+            <a class="btn btn-sm btn-outline-danger" href="{% url 'catalog:product_delete' product.pk %}">
+              Удалить
+            </a>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Товаров пока нет.</p>
+  {% endif %}
+</div>
 {% endblock %}
