@@ -1,38 +1,30 @@
 {% extends "base_generic.html" %}
 
-{% block title %}{{ product.name }}{% endblock %}
-
 {% block content %}
-<div class="container mt-4">
+<div class="container mt-4" style="max-width: 900px;">
   <h1 class="mb-3">{{ product.name }}</h1>
 
-  {% if product.description %}
-    <p class="text-muted">{{ product.description }}</p>
-  {% endif %}
+  <div class="mb-2 text-muted">
+    Категория: {{ product.category }} |
+    Цена: {{ product.price }} |
+    Остаток: {{ product.stock }} |
+    {% if product.is_available %}В наличии{% else %}Нет в наличии{% endif %}
+  </div>
 
-  <p><strong>Цена:</strong> {{ product.price }} ₽</p>
-  <p><strong>На складе:</strong> {{ product.stock }}</p>
+  <div class="mb-3">
+    {% if product.image %}
+      <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 100%; height: auto;">
+    {% else %}
+      <em>Изображение не загружено</em>
+    {% endif %}
+  </div>
 
-  <p>
-    <strong>Статус:</strong>
-    {% if product.is_available %}Доступен{% else %}Недоступен{% endif %}
-  </p>
+  <p>{{ product.description }}</p>
 
-  <hr>
-
-  {% if product.image %}
-    <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid mb-3">
-  {% else %}
-    <p><em>Изображение не загружено</em></p>
-  {% endif %}
-
-  <hr>
-
-  <p><strong>Дата добавления:</strong> {{ product.created_at }}</p>
-  <p><strong>Дата обновления:</strong> {{ product.updated_at }}</p>
-
-  <a class="btn btn-outline-primary mt-3" href="{% url 'catalog:product_list' %}">
-    ← Назад к каталогу
-  </a>
+  <div class="mt-4 d-flex gap-2">
+    <a class="btn btn-outline-primary" href="{% url 'catalog:product_update' product.pk %}">Редактировать</a>
+    <a class="btn btn-outline-danger" href="{% url 'catalog:product_delete' product.pk %}">Удалить</a>
+    <a class="btn btn-secondary" href="{% url 'catalog:product_list' %}">Назад к списку</a>
+  </div>
 </div>
 {% endblock %}
