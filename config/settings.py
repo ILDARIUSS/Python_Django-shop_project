@@ -19,6 +19,7 @@ INSTALLED_APPS = [
 
     "catalog",
     "blog",
+    "users",
 ]
 
 MIDDLEWARE = [
@@ -59,6 +60,17 @@ DATABASES = {
 }
 
 
+# ✅ Кастомная модель пользователя (обязательно для ДЗ-27)
+AUTH_USER_MODEL = "users.User"
+
+# ✅ Куда редиректить неавторизованных пользователей (для LoginRequiredMixin)
+LOGIN_URL = "login"
+
+# ✅ Куда редиректить после входа/выхода
+LOGIN_REDIRECT_URL = "catalog:home"
+LOGOUT_REDIRECT_URL = "catalog:home"
+
+
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
@@ -75,9 +87,12 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-# ✅ MEDIA (картинки товаров)
+# ✅ MEDIA (картинки товаров и аватарки пользователей)
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+# Email настройки (для разработки)
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+DEFAULT_FROM_EMAIL = "noreply@shop.local"
