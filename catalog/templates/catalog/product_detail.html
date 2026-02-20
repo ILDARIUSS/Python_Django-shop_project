@@ -22,8 +22,10 @@
   <p>{{ product.description }}</p>
 
   <div class="mt-4 d-flex gap-2">
-    <a class="btn btn-outline-primary" href="{% url 'catalog:product_update' product.pk %}">Редактировать</a>
-    <a class="btn btn-outline-danger" href="{% url 'catalog:product_delete' product.pk %}">Удалить</a>
+    {% if user.is_authenticated %}
+      <a class="btn btn-outline-primary" href="{% url 'catalog:product_update' product.pk %}">Редактировать</a>
+      <a class="btn btn-outline-danger" href="{% url 'catalog:product_delete' product.pk %}">Удалить</a>
+    {% endif %}
     <a class="btn btn-secondary" href="{% url 'catalog:product_list' %}">Назад к списку</a>
   </div>
 </div>
