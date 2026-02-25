@@ -24,6 +24,7 @@ class ProductForm(forms.ModelForm):
             "image",
             "stock",
             "is_available",
+            "is_published",  # ✅ добавили для ДЗ-28
         )
 
     def __init__(self, *args, **kwargs):
@@ -31,17 +32,15 @@ class ProductForm(forms.ModelForm):
 
         # Общие bootstrap-классы
         for field_name, field in self.fields.items():
-            # Чекбокс оформляем отдельно
-            if field_name == "is_available":
+            # Чекбоксы оформляем отдельно
+            if field_name in ("is_available", "is_published"):
                 field.widget.attrs.update({"class": "form-check-input"})
                 continue
 
-            # Остальные поля — как input/select/file/textarea
-            css_class = "form-control"
-            # Для select Django обычно отдаёт Select — тоже form-control подходит
-            field.widget.attrs.update({"class": css_class})
+            # Остальные поля — input/select/file/textarea
+            field.widget.attrs.update({"class": "form-control"})
 
-        # Чуть улучшим UX плейсхолдерами (не обязательно, но красиво)
+        # UX плейсхолдеры
         self.fields["name"].widget.attrs.update({"placeholder": "Название товара"})
         self.fields["description"].widget.attrs.update({"placeholder": "Описание товара"})
 
