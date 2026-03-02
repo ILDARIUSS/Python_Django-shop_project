@@ -184,7 +184,26 @@ files = [
     {file = "psycopg2_binary-2.9.11-cp39-cp39-win_amd64.whl", hash = "sha256:875039274f8a2361e5207857899706da840768e2a775bf8c65e82f60b197df02"},
 ]
 
+[[package]]
+name = "redis"
+version = "7.2.1"
+description = "Python client for Redis database and key-value store"
+optional = false
+python-versions = ">=3.10"
+files = [
+    {file = "redis-7.2.1-py3-none-any.whl", hash = "sha256:49e231fbc8df2001436ae5252b3f0f3dc930430239bfeb6da4c7ee92b16e5d33"},
+    {file = "redis-7.2.1.tar.gz", hash = "sha256:6163c1a47ee2d9d01221d8456bc1c75ab953cbda18cfbc15e7140e9ba16ca3a5"},
+]
+
+[package.extras]
+circuit-breaker = ["pybreaker (>=1.4.0)"]
+hiredis = ["hiredis (>=3.2.0)"]
+jwt = ["pyjwt (>=2.9.0)"]
+ocsp = ["cryptography (>=36.0.1)", "pyopenssl (>=20.0.1)", "requests (>=2.31.0)"]
+otel = ["opentelemetry-api (>=1.39.1)", "opentelemetry-exporter-otlp-proto-http (>=1.39.1)", "opentelemetry-sdk (>=1.39.1)"]
+xxhash = ["xxhash (>=3.6.0,<3.7.0)"]
+
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.13"
-content-hash = "a8bfb9c9db3768729575bd9acad4a423294b94eeab3baa0bc6265ce4e94f5de4"
+content-hash = "a83762655f4c92459e3b516a14293548b8d5e8cd255599b977c9b899a2b948a6"
