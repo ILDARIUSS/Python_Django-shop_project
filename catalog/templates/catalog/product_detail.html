@@ -2,31 +2,40 @@
 
 {% block content %}
 <div class="container mt-4" style="max-width: 900px;">
-  <h1 class="mb-3">{{ product.name }}</h1>
+  <h1>{{ product.name }}</h1>
 
-  <div class="mb-2 text-muted">
-    Категория: {{ product.category }} |
-    Цена: {{ product.price }} |
-    Остаток: {{ product.stock }} |
-    {% if product.is_available %}В наличии{% else %}Нет в наличии{% endif %}
-  </div>
+  <p><b>Категория:</b> {{ product.category }}</p>
+  <p><b>Цена:</b> {{ product.price }}</p>
+  <p><b>Остаток:</b> {{ product.stock }}</p>
 
-  <div class="mb-3">
-    {% if product.image %}
-      <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 100%; height: auto;">
-    {% else %}
-      <em>Изображение не загружено</em>
-    {% endif %}
-  </div>
+  <p>
+    <b>Статус:</b>
+    {% if product.is_published %}Опубликован{% else %}Не опубликован{% endif %}
+  </p>
 
+  <p><b>Владелец:</b> {{ product.owner }}</p>
+
+  {% if product.image %}
+    <img src="{{ product.image.url }}" alt="{{ product.name }}" style="max-width: 300px;">
+  {% else %}
+    <em>Изображение не загружено</em>
+  {% endif %}
+
+  <hr>
   <p>{{ product.description }}</p>
 
-  <div class="mt-4 d-flex gap-2">
-    {% if user.is_authenticated %}
-      <a class="btn btn-outline-primary" href="{% url 'catalog:product_update' product.pk %}">Редактировать</a>
-      <a class="btn btn-outline-danger" href="{% url 'catalog:product_delete' product.pk %}">Удалить</a>
+  <hr>
+
+  {% if user.is_authenticated %}
+    {% if user == product.owner %}
+      <a href="{% url 'catalog:product_update' product.pk %}">Редактировать</a>
     {% endif %}
-    <a class="btn btn-secondary" href="{% url 'catalog:product_list' %}">Назад к списку</a>
-  </div>
+
+    {% if user == product.owner or perms.catalog.delete_product %}
+      | <a href="{% url 'catalog:product_delete' product.pk %}">Удалить</a>
+    {% endif %}
+  {% endif %}
+
+  <p><a href="{% url 'catalog:product_list' %}">Назад к списку</a></p>
 </div>
 {% endblock %}
