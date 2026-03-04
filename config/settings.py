@@ -2,12 +2,10 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
 SECRET_KEY = "django-insecure-change-me"
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -51,7 +49,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -59,17 +56,13 @@ DATABASES = {
     }
 }
 
-
-# ✅ Кастомная модель пользователя (обязательно для ДЗ-27)
+# ✅ кастомный пользователь (ВАЖНО!)
 AUTH_USER_MODEL = "users.User"
 
-# ✅ Куда редиректить неавторизованных пользователей (для LoginRequiredMixin)
+# ✅ редиректы логина/логаута
 LOGIN_URL = "login"
-
-# ✅ Куда редиректить после входа/выхода
 LOGIN_REDIRECT_URL = "catalog:home"
 LOGOUT_REDIRECT_URL = "catalog:home"
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
@@ -78,21 +71,31 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-
 LANGUAGE_CODE = "ru-ru"
 TIME_ZONE = "Europe/Moscow"
 USE_I18N = True
 USE_TZ = True
 
-
 STATIC_URL = "static/"
 
-# ✅ MEDIA (картинки товаров и аватарки пользователей)
+# ✅ MEDIA (картинки товаров и аватарки)
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+# ==========================
+# ✅ HOMEWORK 29: REDIS CACHE
+# ==========================
+CACHE_ENABLED = True
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-# Email настройки (для разработки)
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+    }
+}
+
+# Email настройки (если у тебя в ДЗ-27 были письма)
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "noreply@shop.local"
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

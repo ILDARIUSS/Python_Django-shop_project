@@ -1,0 +1,22 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Категория: {{ category.name }}</h1>
+
+  {% if products %}
+    <ul>
+      {% for product in products %}
+        <li>
+          <a href="{% url 'catalog:product_detail' product.pk %}">
+            {{ product.name }}
+          </a>
+          — {{ product.price }}
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>В этой категории пока нет товаров.</p>
+  {% endif %}
+
+  <p><a href="{% url 'catalog:product_list' %}">Назад в каталог</a></p>
+{% endblock %}

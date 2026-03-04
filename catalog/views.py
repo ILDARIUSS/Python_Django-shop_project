@@ -1,104 +1,80 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.core.exceptions import PermissionDenied
-from django.db.models import Q
-from django.urls import reverse, reverse_lazy
-from django.views.generic import TemplateView, ListView, DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.conf import settings
+from django.core.cache import cache
+from django.shortcuts import get_object_or_404, render
+from django.views.decorators.cache import cache_page
 
-from .forms import ProductForm
-from .models import Product
+from .models import Category, Product
+from .services import get_products_by_category
 
-
-class HomeView(TemplateView):
-    template_name = "catalog/home.html"
+CACHE_TTL = 60  # секунд
 
 
-class ContactsView(TemplateView):
-    template_name = "catalog/contacts.html"
+def home(request):
+    return render(request, "catalog/home.html")
 
 
-class ProductListView(ListView):
-    model = Product
-    template_name = "catalog/product_list.html"
-    context_object_name = "products"
-
-    def get_queryset(self):
-        qs = super().get_queryset().select_related("category", "owner")
-
-        user = self.request.user
-        if not user.is_authenticated:
-            # Аноним видит только опубликованные
-            return qs.filter(is_published=True)
-
-        # Модератор/админ видит все
-        if user.is_staff or user.has_perm("catalog.can_unpublish_product"):
-            return qs
-
-        # Обычный пользователь видит опубликованные + свои
-        return qs.filter(Q(is_published=True) | Q(owner=user))
+def contacts(request):
+    return render(request, "catalog/contacts.html")
 
 
-class ProductDetailView(DetailView):
-    model = Product
-    template_name = "catalog/product_detail.html"
-    context_object_name = "product"
+def product_list(request):
+    """
+    Список товаров (низкоуровневый кеш).
+    """
+    cache_key = "product_list"
 
-    def dispatch(self, request, *args, **kwargs):
-        obj = self.get_object()
-        user = request.user
+    if getattr(settings, "CACHE_ENABLED", False):
+        products = cache.get(cache_key)
+        if products is None:
+            qs = Product.objects.all().select_related("category").order_by("-id")
 
-        # Опубликован — всем можно
-        if obj.is_published:
-            return super().dispatch(request, *args, **kwargs)
+            if hasattr(Product, "is_published"):
+                qs = qs.filter(is_published=True)
+            if hasattr(Product, "is_available"):
+                qs = qs.filter(is_available=True)
 
-        # Не опубликован — только владелец или модератор/админ
-        if user.is_authenticated and (user == obj.owner or user.is_staff or user.has_perm("catalog.can_unpublish_product")):
-            return super().dispatch(request, *args, **kwargs)
+            products = list(qs)
+            cache.set(cache_key, products, CACHE_TTL)
+    else:
+        qs = Product.objects.all().select_related("category").order_by("-id")
+        if hasattr(Product, "is_published"):
+            qs = qs.filter(is_published=True)
+        if hasattr(Product, "is_available"):
+            qs = qs.filter(is_available=True)
+        products = qs
 
-        raise PermissionDenied("Этот товар не опубликован.")
-
-
-class ProductCreateView(LoginRequiredMixin, CreateView):
-    model = Product
-    form_class = ProductForm
-    template_name = "catalog/product_form.html"
-
-    def form_valid(self, form):
-        form.instance.owner = self.request.user
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse("catalog:product_detail", kwargs={"pk": self.object.pk})
+    return render(request, "catalog/product_list.html", {"products": products})
 
 
-class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Product
-    form_class = ProductForm
-    template_name = "catalog/product_form.html"
-
-    def test_func(self):
-        # Редактировать может только владелец
-        return self.request.user == self.get_object().owner
-
-    def form_valid(self, form):
-        # Снять с публикации может только модератор/админ
-        if "is_published" in form.changed_data and form.cleaned_data.get("is_published") is False:
-            user = self.request.user
-            if not (user.is_staff or user.has_perm("catalog.can_unpublish_product")):
-                raise PermissionDenied("Снимать с публикации может только модератор.")
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse("catalog:product_detail", kwargs={"pk": self.object.pk})
+def _product_detail_impl(request, pk: int):
+    product = get_object_or_404(Product, pk=pk)
+    return render(request, "catalog/product_detail.html", {"product": product})
 
 
-class ProductDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Product
-    template_name = "catalog/product_confirm_delete.html"
-    success_url = reverse_lazy("catalog:product_list")
+# Кеширование страницы товара
+if getattr(settings, "CACHE_ENABLED", False):
+    product_detail = cache_page(CACHE_TTL)(_product_detail_impl)
+else:
+    product_detail = _product_detail_impl
 
-    def test_func(self):
-        obj = self.get_object()
-        user = self.request.user
-        # Удалить может владелец или тот, у кого есть право delete_product (модератор)
-        return user == obj.owner or user.is_staff or user.has_perm("catalog.delete_product")
+
+def category_products(request, pk: int):
+    """
+    Страница товаров по категории + сервисная функция + кеш по категории.
+    """
+    category = get_object_or_404(Category, pk=pk)
+    cache_key = f"category_products:{pk}"
+
+    if getattr(settings, "CACHE_ENABLED", False):
+        products = cache.get(cache_key)
+        if products is None:
+            products = list(get_products_by_category(pk))
+            cache.set(cache_key, products, CACHE_TTL)
+    else:
+        products = get_products_by_category(pk)
+
+    return render(
+        request,
+        "catalog/category_products.html",
+        {"category": category, "products": products},
+    )
